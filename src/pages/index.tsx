@@ -1,6 +1,7 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import Image from "next/image";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 import { api } from "../utils/api";
@@ -19,10 +20,12 @@ const Home: NextPage = () => {
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#48434e] to-[#1f1f23]">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-          <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-            Play{" "}
-            <span className="text-[hsl(236,46%,49%)] drop-shadow-lg">punk</span>
-          </h1>
+          <Image
+            src="/playpunk.png"
+            alt="Playpunk logo"
+            width={300}
+            height={300}
+          />
           <div className="flex flex-col items-center gap-2">
             <AuthShowcase />
           </div>
