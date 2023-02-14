@@ -23,6 +23,9 @@ const Home: NextPage = () => {
           </h1>
           <div className="flex flex-col items-center gap-2">
             <p className="text-2xl text-white">
+              {exampleQuery.data === undefined && "Loading..."}
+              {exampleQuery.data === null && "No data"}
+              {exampleQuery.error && "Error"}
               {exampleQuery.data?.map((item) => (
                 <div key={item.id}>
                   <p>{item.id}</p>
