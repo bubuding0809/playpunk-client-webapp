@@ -69,9 +69,10 @@ const AuthShowcase: React.FC = () => {
       });
       alert("Page created successfully");
       console.log("success", response);
-    } catch (error: any) {
+    } catch (error) {
       console.log("error", error);
     }
+    return;
   };
 
   return (
