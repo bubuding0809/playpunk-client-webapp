@@ -5,6 +5,7 @@ import Image from "next/image";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 import { api } from "../utils/api";
+import { useState } from "react";
 
 const Home: NextPage = () => {
   const exampleQuery = api.example.getAll.useQuery();
@@ -45,14 +46,82 @@ const AuthShowcase: React.FC = () => {
     { enabled: sessionData?.user !== undefined }
   );
 
+  const [notionPageState, setNotionPageState] = useState({
+    title: "Test title",
+    content: "Test content",
+  });
+
+  const createNotionPage = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    // Check if form is valid
+    if (!notionPageState.title || !notionPageState.content) {
+      alert("Please fill out all fields");
+      return;
+    }
+    try {
+      const response = await fetch("/api/notion_client", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(notionPageState),
+      });
+      alert("Page created successfully");
+      console.log("success", response);
+    } catch (error: any) {
+      console.log("error", error);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       <p className="text-center text-2xl text-white">
         {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
         {secretMessage && <span> - {secretMessage}</span>}
       </p>
+      {sessionData && (
+        <form onSubmit={(e) => createNotionPage(e)}>
+          <div className="roun flex w-96 flex-col items-center justify-center gap-4 rounded-lg border bg-gray-700 p-4 px-10">
+            <p className="text-center text-2xl text-white">
+              Create a new Notion page
+            </p>
+            <label className="flex w-full flex-col text-white">
+              Title
+              <input
+                className="rounded-full bg-white/50 px-4 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+                type="text"
+                value={notionPageState.title}
+                onChange={(e) =>
+                  setNotionPageState({
+                    ...notionPageState,
+                    title: e.target.value,
+                  })
+                }
+              />
+            </label>
+            <label className="flex w-full flex-col text-white">
+              Content
+              <input
+                className="rounded-full bg-white/50 px-4 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+                type="text"
+                value={notionPageState.content}
+                onChange={(e) =>
+                  setNotionPageState({
+                    ...notionPageState,
+                    content: e.target.value,
+                  })
+                }
+              />
+            </label>
+            <button className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20">
+              Test Notion API
+            </button>
+          </div>
+        </form>
+      )}
       <button
-        className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+        className="mt-6 rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
         onClick={sessionData ? () => void signOut() : () => void signIn()}
       >
         {sessionData ? "Sign out" : "Sign in"}
